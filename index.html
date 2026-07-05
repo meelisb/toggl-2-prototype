@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Toggl Estimate Alerts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</helmet>
+<div style="display:flex; height:100vh; width:100%; background:#F7F7F8; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; color:#1A1A1A; overflow:hidden; font-size:14px;">
+
+  <!-- ================= SIDEBAR ================= -->
+  <div style="width:232px; flex-shrink:0; background:#EFEFEF; border-right:1px solid #E0E0E0; display:flex; flex-direction:column; padding:14px 10px 10px;">
+
+    <div style="display:flex; align-items:center; gap:8px; padding:6px 8px 14px;">
+      <div style="width:26px; height:26px; border-radius:50%; background:#1A1A1A; color:#fff; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; flex-shrink:0;">2.0</div>
+      <div style="font-size:13px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;">Meelis Burget</div>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><path d="M6 9l6 6 6-6" stroke="#6b6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div style="font-size:11px; font-weight:700; letter-spacing:.04em; color:#8A8D93; padding:10px 10px 4px;">TRACK</div>
+    <div onClick="{{ goTimer }}" style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; cursor:pointer; background:{{ timerNavBg }}; color:{{ timerNavColor }}; font-weight:{{ timerNavWeight }};">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <span style="flex:1;">Timer</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; color:#1A1A1A;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 9h18" stroke="currentColor" stroke-width="2"/></svg>
+      <span>My activity</span>
+    </div>
+
+    <div style="font-size:11px; font-weight:700; letter-spacing:.04em; color:#8A8D93; padding:14px 10px 4px;">ANALYZE</div>
+    <div style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; color:#1A1A1A;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 19V10M12 19V5M20 19v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <span>Reports</span>
+    </div>
+
+    <div style="font-size:11px; font-weight:700; letter-spacing:.04em; color:#8A8D93; padding:14px 10px 4px;">PLAN</div>
+    <div onClick="{{ goProjects }}" style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; cursor:pointer; background:{{ projectsNavBg }}; color:{{ projectsNavColor }}; font-weight:{{ projectsNavWeight }};">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="currentColor" stroke-width="2"/></svg>
+      <span style="flex:1;">Projects</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; color:#1A1A1A;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <span>Tasks</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; color:#1A1A1A;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="10" width="18" height="4" rx="1" stroke="currentColor" stroke-width="2"/><rect x="3" y="4" width="10" height="4" rx="1" stroke="currentColor" stroke-width="2"/><rect x="3" y="16" width="14" height="4" rx="1" stroke="currentColor" stroke-width="2"/></svg>
+      <span style="flex:1;">Timeline</span>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="#C8910A"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+    </div>
+
+    <div style="font-size:11px; font-weight:700; letter-spacing:.04em; color:#8A8D93; padding:14px 10px 4px;">MANAGE</div>
+    <div style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; color:#1A1A1A;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6" stroke="currentColor" stroke-width="2"/></svg>
+      <span>Members</span>
+    </div>
+
+    <div style="flex:1;"></div>
+
+    <!-- ============ OVER-ESTIMATE BANNER ============ -->
+    <sc-if value="{{ hasOverEstimate }}" hint-placeholder-val="{{ true }}">
+    <div style="background:#fff; border:1px solid #EFD6D4; border-radius:10px; margin:10px 2px 8px; overflow:hidden; box-shadow:0 1px 2px rgba(0,0,0,0.04); flex-shrink:0;">
+      <div onClick="{{ toggleBanner }}" style="display:flex; align-items:center; gap:8px; padding:11px 12px; cursor:pointer;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><path d="M12 2L1 21h22L12 2z" stroke="#8A0701" stroke-width="2" stroke-linejoin="round"/><path d="M12 9v5" stroke="#8A0701" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="#8A0701"/></svg>
+        <div style="flex:1; font-weight:600; color:#8A0701; font-size:13px;">Over estimate ({{ bannerCount }})</div>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="transform: rotate({{ bannerChevronRotate }}); transition:transform .15s;"><path d="M6 9l6 6 6-6" stroke="#8A0701" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <sc-if value="{{ bannerExpanded }}" hint-placeholder-val="{{ false }}">
+        <div style="border-top:1px solid #F3E3E2;">
+          <sc-for list="{{ bannerProjects }}" as="bp" hint-placeholder-count="2">
+            <div onClick="{{ bp.onClick }}" style="padding:10px 12px; cursor:{{ bp.cursor }}; border-bottom:1px solid #F5EEED;">
+              <div style="font-size:13px; font-weight:600; color:#1A1A1A;">{{ bp.name }}</div>
+              <div style="font-size:12px; color:#8A0701; margin-top:2px;">{{ bp.statText }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+    </sc-if>
+
+    <div style="display:flex; align-items:center; gap:10px; padding:6px 8px;">
+      <div style="flex:1;"></div>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2v14M6 10l6 6 6-6" stroke="#6b6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20h16" stroke="#6b6b6b" stroke-width="2" stroke-linecap="round"/></svg>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#6b6b6b" stroke-width="2"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z" stroke="#6b6b6b" stroke-width="1.5"/></svg>
+    </div>
+  </div>
+
+  <!-- ================= MAIN AREA ================= -->
+  <div style="flex:1; overflow-y:auto; position:relative; min-width:0;">
+
+    <!-- ---------- TIMER VIEW ---------- -->
+    <sc-if value="{{ isTimerView }}" hint-placeholder-val="{{ true }}">
+      <div data-screen-label="Timer" style="padding:20px 28px;">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px; flex-wrap:wrap; row-gap:10px;">
+          <input placeholder="What are you working on?" style="flex:1 1 160px; min-width:0; border:none; background:transparent; font-size:19px; font-weight:500; outline:none; color:#1A1A1A;" />
+          <div style="display:flex; gap:8px; flex-shrink:0;">
+            <div style="display:flex; align-items:center; gap:5px; padding:7px 12px; border:1px solid #E3E3E3; border-radius:16px; font-size:13px; color:#55575C; white-space:nowrap;">@ Task</div>
+            <div style="display:flex; align-items:center; gap:5px; padding:7px 12px; border:1px solid #E3E3E3; border-radius:16px; font-size:13px; color:#55575C; white-space:nowrap;">+ Project</div>
+            <div style="display:flex; align-items:center; gap:5px; padding:7px 12px; border:1px solid #E3E3E3; border-radius:16px; font-size:13px; color:#55575C; white-space:nowrap;"># Tags</div>
+          </div>
+          <div onClick="{{ openLogModal }}" style="display:flex; align-items:center; gap:6px; padding:8px 16px; border:1.5px solid #A84C9D; color:#A84C9D; border-radius:18px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; flex-shrink:0;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 10h18" stroke="currentColor" stroke-width="2"/><path d="M12 14v4M10 16h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Log time
+          </div>
+          <div style="font-size:20px; font-variant-numeric:tabular-nums; color:#8A8D93; padding:0 6px; white-space:nowrap; flex-shrink:0;">0:00:00</div>
+          <div style="width:38px; height:38px; border-radius:50%; background:#A84C9D; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M6 4l14 8-14 8z"/></svg>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:14px; padding:10px 0; border-bottom:1px solid #EDEDED; margin-bottom:16px;">
+          <svg onClick="{{ goPrevWeek }}" width="16" height="16" viewBox="0 0 24 24" fill="none" style="cursor:pointer;"><path d="M15 6l-6 6 6 6" stroke="#8A8D93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div style="font-size:13px; font-weight:600; color:#55575C; white-space:nowrap;">{{ weekLabel }} &bull; W{{ weekNumber }}</div>
+          <svg onClick="{{ goNextWeek }}" width="16" height="16" viewBox="0 0 24 24" fill="none" style="cursor:pointer;"><path d="M9 6l6 6-6 6" stroke="#8A8D93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div style="flex:1;"></div>
+          <div style="font-size:12px; color:#8A8D93;">Week</div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px; font-size:12px;">
+          <div style="color:#8A8D93; font-weight:600;">Logged</div>
+          <div style="flex:1; height:8px; border-radius:4px; background:#EEE; overflow:hidden; display:flex;">
+            <div style="width:70%; background:#7A6A16;"></div>
+            <div style="width:12%; background:#B23E7A;"></div>
+            <div style="width:10%; background:#7B5FC4;"></div>
+            <div style="width:8%; background:#2E9E5B;"></div>
+          </div>
+          <div style="color:#55575C; font-weight:600;">37h 30m</div>
+          <div style="color:#8A8D93; font-weight:600; margin-left:14px;">Planned</div>
+          <div style="width:60px; height:8px; border-radius:4px; background:#2E9E5B;"></div>
+          <div style="color:#55575C; font-weight:600;">5h 15m</div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:10px;">
+          <sc-for list="{{ weekDays }}" as="d" hint-placeholder-count="7">
+            <div>
+              <div style="font-size:12px; color:#8A8D93; font-weight:600; margin-bottom:8px;">{{ d.label }}</div>
+              <div style="background:#fff; border:1px solid #ECECEC; border-radius:8px; min-height:280px; padding:6px; display:flex; flex-direction:column; gap:6px;">
+                <sc-for list="{{ d.blocks }}" as="b" hint-placeholder-count="2">
+                  <div onClick="{{ b.onClick }}" style="background:{{ b.color }}; opacity:{{ b.opacity }}; border:{{ b.border }}; color:#fff; border-radius:5px; padding:4px 7px; font-size:11px; font-weight:600; line-height:1.3; height:{{ b.height }}px; box-sizing:border-box; overflow:hidden; cursor:pointer;">
+                    <sc-if value="{{ b.showText }}" hint-placeholder-val="{{ true }}">{{ b.text }}</sc-if>
+                  </div>
+                </sc-for>
+                <div onClick="{{ d.onAddClick }}" style="flex:1; min-height:36px; border-radius:5px; cursor:pointer;" style-hover="background:#F6E5F3;"></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ---------- PROJECTS LIST VIEW ---------- -->
+    <sc-if value="{{ isProjectsView }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="Projects" style="padding:20px 28px;">
+        <div style="display:flex; align-items:center; margin-bottom:18px;">
+          <div style="font-size:24px; font-weight:700;">Projects</div>
+          <div style="flex:1;"></div>
+          <div style="background:#A84C9D; color:#fff; font-weight:600; font-size:13px; padding:9px 16px; border-radius:8px;">Save view</div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+          <div style="border:1px solid #E3E3E3; border-radius:8px; padding:7px 12px; font-size:13px; color:#55575C;">Show: Active</div>
+          <div style="border:1px solid #E3E3E3; border-radius:8px; padding:7px 12px; font-size:13px; color:#55575C;">+ Filter</div>
+          <div style="border:1px solid #E3E3E3; border-radius:8px; padding:7px 12px; font-size:13px; color:#55575C;">Group by</div>
+        </div>
+
+        <div style="background:#fff; border:1px solid #ECECEC; border-radius:10px;">
+          <div style="display:grid; grid-template-columns:1.6fr 1.2fr 1fr 1.3fr 1.1fr 0.9fr; padding:10px 16px; font-size:11px; font-weight:700; color:#8A8D93; letter-spacing:.03em; border-bottom:1px solid #ECECEC; border-radius:10px 10px 0 0;">
+            <div>PROJECT</div>
+            <div>CLIENT</div>
+            <div>RATE</div>
+            <div>TIME STATUS</div>
+            <div>FIXED FEE</div>
+            <div style="position:relative; display:flex; align-items:center; gap:5px; width:fit-content;" onMouseEnter="{{ showHeaderTooltip }}" onMouseLeave="{{ hideTooltip }}">
+              VARIANCE
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" style="cursor:help;"><circle cx="12" cy="12" r="9" stroke="#8A8D93" stroke-width="1.6"/><path d="M12 11v5" stroke="#8A8D93" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="8" r="0.9" fill="#8A8D93"/></svg>
+              <sc-if value="{{ showHeaderTooltipVal }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute; bottom:22px; right:0; width:250px; background:#242424; color:#fff; font-size:11.5px; font-weight:400; line-height:1.5; white-space:pre-line; padding:9px 11px; border-radius:7px; box-shadow:0 6px 18px rgba(0,0,0,0.22); z-index:20;">{{ varianceTooltipText }}</div>
+              </sc-if>
+            </div>
+          </div>
+
+          <sc-for list="{{ projectRows }}" as="row" hint-placeholder-count="4">
+            <div style="display:grid; grid-template-columns:1.6fr 1.2fr 1fr 1.3fr 1.1fr 0.9fr; padding:14px 16px; align-items:center; border-bottom:1px solid #F4F4F4; font-size:13px;">
+              <div onClick="{{ row.onNameClick }}" style="display:flex; align-items:center; gap:8px; font-weight:600; cursor:{{ row.nameCursor }}; width:fit-content;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" fill="{{ row.folderColor }}"/></svg>
+                {{ row.name }}
+              </div>
+              <div style="color:#55575C;">{{ row.client }}</div>
+              <div style="color:#55575C;">{{ row.rateText }}</div>
+              <div onClick="{{ row.onClick }}" style="cursor:{{ row.cursor }};">
+                <div style="font-size:12.5px; margin-bottom:5px;">{{ row.statusText }}</div>
+                <div style="width:120px; height:6px; border-radius:3px; background:#EDEDED; overflow:hidden;">
+                  <div style="width:{{ row.barWidth }}; height:100%; background:{{ row.barColor }};"></div>
+                </div>
+              </div>
+              <div style="color:#55575C;">{{ row.fixedFeeText }}</div>
+              <div style="position:relative; color:{{ row.varianceColor }}; font-weight:600;" onMouseEnter="{{ row.onTooltipEnter }}" onMouseLeave="{{ hideTooltip }}">
+                {{ row.varianceText }}
+                <sc-if value="{{ row.showTooltip }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute; bottom:22px; right:0; width:250px; background:#242424; color:#fff; font-size:11.5px; font-weight:400; line-height:1.5; white-space:pre-line; padding:9px 11px; border-radius:7px; box-shadow:0 6px 18px rgba(0,0,0,0.22); z-index:20;">{{ varianceTooltipText }}</div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ---------- PROJECT VIEW (Site Redesign) ---------- -->
+    <sc-if value="{{ isProjectView }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="Project · Site Redesign" style="padding:20px 28px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#8A8D93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="4" y="7" width="16" height="12" rx="2" stroke="#8A8D93" stroke-width="1.6"/><path d="M4 7l2-3h4l2 3" stroke="#8A8D93" stroke-width="1.6"/></svg>
+          <div style="font-size:17px; font-weight:700;">{{ selProjectName }}</div>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="color:#8A8D93;"><rect x="5" y="10" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7a4 4 0 018 0v3" stroke="currentColor" stroke-width="1.8"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="color:#8A8D93;"><rect x="3" y="7" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 7l2-3h4l2 3" stroke="currentColor" stroke-width="1.8"/></svg>
+          <div style="font-size:13px; color:#55575C;">{{ selProjectClient }}</div>
+          <div style="flex:1;"></div>
+          <div style="border:1px solid #E3E3E3; border-radius:8px; padding:8px 14px; font-size:13px; color:#55575C;">Share</div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:26px; border-bottom:1px solid #EDEDED; margin-bottom:20px;">
+          <sc-for list="{{ projectTabs }}" as="tab" hint-placeholder-count="6">
+            <div onClick="{{ tab.onClick }}" style="padding:10px 2px; font-size:13.5px; font-weight:600; cursor:{{ tab.cursor }}; color:{{ tab.color }}; border-bottom:2px solid {{ tab.borderColor }};">{{ tab.label }}</div>
+          </sc-for>
+        </div>
+
+        <!-- OVERVIEW SUBVIEW -->
+        <sc-if value="{{ isOverviewSubview }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex; gap:32px;">
+            <div style="flex:1; min-width:0;">
+              <div style="background:#FBF0FA; border:1px solid #F3DCF1; border-radius:10px; padding:12px 16px; display:flex; align-items:center; gap:10px; margin-bottom:18px; font-size:13px;">
+                <span style="color:#A84C9D;">&#9733;</span>
+                <div>You're trying <span style="color:#A84C9D; font-weight:600;">10 Premium features</span> on this project &mdash; recurring, estimate, billing &amp; <u>more</u></div>
+                <div style="flex:1;"></div>
+                <div style="background:#fff; border:1px solid #E3C7E0; border-radius:8px; padding:6px 12px; font-weight:600; color:#1A1A1A;">Upgrade now</div>
+              </div>
+
+              <div style="font-size:20px; font-weight:700; margin-bottom:14px;">Site Redesign</div>
+
+              <div style="display:flex; gap:10px; margin-bottom:16px;">
+                <div style="display:flex; align-items:center; gap:6px; border:1px solid #E3E3E3; border-radius:16px; padding:7px 13px; font-size:12.5px; color:#55575C;">Northwind Studio</div>
+                <div style="display:flex; align-items:center; gap:6px; border:1px solid #E3E3E3; border-radius:16px; padding:7px 13px; font-size:12.5px; color:#55575C;">Jun 22 &ndash; Jul 5</div>
+                <div style="display:flex; align-items:center; gap:6px; background:#F6E5F3; color:#A84C9D; border-radius:16px; padding:7px 13px; font-size:12.5px; font-weight:600;">Private</div>
+                <div style="display:flex; align-items:center; gap:6px; border:1px solid #E3E3E3; border-radius:16px; padding:7px 13px; font-size:12.5px; color:#55575C;">Shared</div>
+              </div>
+
+              <div style="color:#B7B9BD; font-size:13px; margin-bottom:20px;">+ Tag</div>
+              <div style="color:#B7B9BD; font-size:14px; margin-bottom:24px;">Project description</div>
+
+              <div style="display:flex; flex-direction:column; gap:14px; font-size:13.5px; color:#55575C;">
+                <div>+ Add alert</div>
+                <div>+ Add milestone</div>
+                <div>+ Add attachment</div>
+              </div>
+            </div>
+
+            <div style="width:320px; flex-shrink:0; border-left:1px solid #ECECEC; padding-left:28px;">
+              <div style="font-size:13px; font-weight:700; margin-bottom:14px;">Project members</div>
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:22px; font-size:13px;">
+                <div style="width:22px; height:22px; border-radius:50%; background:#A84C9D; color:#fff; font-size:9px; font-weight:700; display:flex; align-items:center; justify-content:center;">MB</div>
+                Meelis Burget <span style="color:#8A8D93;">(Project manager)</span>
+              </div>
+
+              <div style="display:flex; align-items:center; margin-bottom:12px;">
+                <div style="font-size:13px; font-weight:700; flex:1;">Recurring</div>
+                <div style="width:32px; height:18px; border-radius:9px; background:#E3E3E3;"></div>
+              </div>
+              <div style="font-size:12px; color:#8A8D93; margin-bottom:20px; line-height:1.5;">Make this project recurring to service your retainer project.</div>
+
+              <div style="display:flex; align-items:center; margin-bottom:12px;">
+                <div style="font-size:13px; font-weight:700; flex:1;">Estimate</div>
+                <div style="width:32px; height:18px; border-radius:9px; background:#A84C9D; position:relative;"><div style="width:14px; height:14px; border-radius:50%; background:#fff; position:absolute; top:2px; right:2px;"></div></div>
+              </div>
+              <div style="display:flex; gap:6px; margin-bottom:10px;">
+                <div style="background:#F6E5F3; color:#A84C9D; font-weight:600; font-size:12px; padding:6px 12px; border-radius:7px;">Set manually</div>
+                <div style="color:#8A8D93; font-size:12px; padding:6px 12px;">From tasks</div>
+              </div>
+              <div style="display:flex; align-items:center; border:1px solid #E3E3E3; border-radius:7px; padding:8px 12px; margin-bottom:14px;">
+                <input type="number" min="0" step="1" value="{{ srEstimateInput }}" onChange="{{ setSrEstimate }}" style="border:none; outline:none; width:60px; font-size:13px; color:#1A1A1A; background:transparent;" />
+                <span style="font-size:13px; color:#8A8D93;">h</span>
+              </div>
+
+              <div onClick="{{ goToDashboardTimeProgress }}" style="cursor:pointer; border:1px solid #ECECEC; border-radius:9px; padding:12px 14px; margin-bottom:22px;">
+                <div style="font-size:13px; font-weight:600; color:{{ srVarianceColor }};">{{ srWidgetText }}</div>
+                <div style="width:100%; height:6px; border-radius:3px; background:#EDEDED; margin-top:7px; overflow:hidden;">
+                  <div style="width:{{ srBarWidth }}; height:100%; background:{{ srBarColor }};"></div>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; margin-bottom:12px; padding-top:8px; border-top:1px solid #ECECEC;">
+                <div style="font-size:13px; font-weight:700; flex:1;">Billing</div>
+              </div>
+              <div style="display:flex; align-items:center; margin-bottom:16px;">
+                <div style="font-size:13px; flex:1;">Billable</div>
+                <div style="width:32px; height:18px; border-radius:9px; background:#A84C9D; position:relative;"><div style="width:14px; height:14px; border-radius:50%; background:#fff; position:absolute; top:2px; right:2px;"></div></div>
+              </div>
+
+              <div style="display:flex; align-items:center; margin-bottom:12px; padding-top:8px; border-top:1px solid #ECECEC;">
+                <div style="font-size:13px; font-weight:700; flex:1;">Fixed fee</div>
+                <div style="width:32px; height:18px; border-radius:9px; background:#A84C9D; position:relative;"><div style="width:14px; height:14px; border-radius:50%; background:#fff; position:absolute; top:2px; right:2px;"></div></div>
+              </div>
+              <div style="border:1px solid #E3E3E3; border-radius:7px; padding:8px 12px; font-size:13px;">4000 EUR</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- DASHBOARD SUBVIEW -->
+        <sc-if value="{{ isDashboardSubview }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="display:flex; justify-content:flex-end; margin-bottom:20px; position:relative;">
+              <sc-if value="{{ dashboardDropdownOpen }}" hint-placeholder-val="{{ false }}">
+                <div onClick="{{ closeDashboardDropdown }}" style="position:fixed; inset:0; z-index:9;"></div>
+              </sc-if>
+              <div onClick="{{ toggleDashboardDropdown }}" style="display:flex; align-items:center; gap:8px; border:1px solid #E3E3E3; border-radius:8px; padding:8px 14px; font-size:13px; cursor:pointer; background:#fff; z-index:10;">
+                <span style="color:#8A8D93;">Show:</span>
+                <span style="font-weight:600;">{{ dashboardModeLabel }}</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#8A8D93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <sc-if value="{{ dashboardDropdownOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute; top:40px; right:0; background:#fff; border:1px solid #ECECEC; border-radius:9px; box-shadow:0 8px 24px rgba(0,0,0,0.12); width:180px; z-index:11; overflow:hidden;">
+                  <sc-for list="{{ dashboardModeOptions }}" as="opt" hint-placeholder-count="2">
+                    <div onClick="{{ opt.onClick }}" style="padding:10px 14px; font-size:13px; cursor:pointer; background:{{ opt.bg }}; color:{{ opt.color }}; font-weight:{{ opt.weight }};">{{ opt.label }}</div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:20px; margin-bottom:28px; background:#fff; border:1px solid #ECECEC; border-radius:10px; padding:20px 24px;">
+              <sc-for list="{{ dashboardSummaryCards }}" as="card" hint-placeholder-count="5">
+                <div>
+                  <div style="font-size:12.5px; font-weight:600; color:#55575C; margin-bottom:8px;">{{ card.label }}</div>
+                  <div style="font-size:18px; font-weight:700; color:{{ card.color }};">{{ card.value }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="background:#fff; border:1px solid #ECECEC; border-radius:10px; padding:20px 24px; margin-bottom:24px;">
+              <div style="font-size:14px; font-weight:700; margin-bottom:16px;">Actual vs estimated time</div>
+              <svg width="100%" height="220" viewBox="0 0 1100 240" preserveAspectRatio="xMidYMid meet">
+                <line x1="0" y1="200" x2="1100" y2="200" stroke="#F0F0F0" stroke-width="1"/>
+                <line x1="0" y1="150" x2="1100" y2="150" stroke="#F0F0F0" stroke-width="1"/>
+                <line x1="0" y1="100" x2="1100" y2="100" stroke="#F0F0F0" stroke-width="1"/>
+                <line x1="0" y1="50" x2="1100" y2="50" stroke="#F0F0F0" stroke-width="1"/>
+                <line x1="0" y1="60" x2="1100" y2="60" stroke="#D8D8D8" stroke-width="1.5"/>
+                <text x="0" y="235" font-size="11" fill="#8A8D93">Mon 22/6</text>
+                <text x="500" y="235" font-size="11" fill="#8A8D93">Mon 29/6</text>
+                <text x="1030" y="235" font-size="11" fill="#8A8D93">Sun 5/7</text>
+                <text x="1060" y="55" font-size="11" fill="#8A8D93">{{ chartEstText }}</text>
+                <polyline points="0,200 150,200 260,150 500,140 620,110 750,95 880,62 950,58 1010,50" fill="none" stroke="{{ chartLineColor }}" stroke-width="2.5"/>
+                <sc-if value="{{ chartIsOver }}" hint-placeholder-val="{{ false }}">
+                  <polyline points="950,58 1010,50" fill="none" stroke="#8A0701" stroke-width="3"/>
+                </sc-if>
+              </svg>
+            </div>
+
+            <div style="background:#fff; border:1px solid #ECECEC; border-radius:10px; overflow:hidden;">
+              <div style="padding:16px 24px; font-size:14px; font-weight:700; border-bottom:1px solid #ECECEC;">Task and member breakdown</div>
+              <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; padding:10px 24px; font-size:11px; font-weight:700; color:#8A8D93; border-bottom:1px solid #ECECEC;">
+                <div>TASK</div><div>LOGGED TIME</div><div>ESTIMATED TIME</div><div>VARIANCE</div>
+              </div>
+              <sc-for list="{{ breakdownRows }}" as="brow" hint-placeholder-count="5">
+                <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; padding:12px 24px; font-size:13px; border-bottom:1px solid #F5F5F5;">
+                  <div>{{ brow.task }}</div><div>{{ brow.logged }}</div><div>{{ brow.est }}</div><div style="color:{{ brow.varianceColor }}; font-weight:600;">{{ brow.variance }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- ================= LOG TIME MODAL (toolbar + calendar create) ================= -->
+  <sc-if value="{{ logModalOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeModal }}" style="position:fixed; inset:0; background:rgba(20,20,20,0.35); display:flex; align-items:center; justify-content:center; z-index:200;">
+      <div onClick="{{ stopPropagation }}" style="background:#fff; width:420px; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,0.25); padding:20px 22px;">
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:16px;">
+          <div style="font-size:12px; font-weight:700; letter-spacing:.04em; color:#55575C; white-space:nowrap;">LOG TIME</div>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#B7B9BD" stroke-width="1.6"/><path d="M12 11v5" stroke="#B7B9BD" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="8" r="0.9" fill="#B7B9BD"/></svg>
+          <div style="flex:1;"></div>
+          <div onClick="{{ closeModal }}" style="cursor:pointer; color:#8A8D93; font-size:16px; line-height:1;">&times;</div>
+        </div>
+
+        <input placeholder="Add description" value="{{ logModalDescription }}" onChange="{{ setModalDescription }}" style="width:100%; box-sizing:border-box; border:none; background:#F5F5F5; border-radius:8px; padding:11px 12px; font-size:14px; color:#1A1A1A; outline:none; margin-bottom:12px;" />
+
+        <div style="display:flex; gap:8px; margin-bottom:16px; position:relative;">
+          <div style="display:flex; align-items:center; gap:6px; padding:7px 12px; border:1px solid #E3E3E3; border-radius:16px; font-size:13px; color:#55575C;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Task
+          </div>
+          <div onClick="{{ toggleProjectPicker }}" style="display:flex; align-items:center; gap:6px; padding:7px 12px; border:1px solid #E3E3E3; border-radius:16px; font-size:13px; color:#55575C; cursor:pointer;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="currentColor" stroke-width="2"/></svg>
+            {{ modalProjectName }}
+          </div>
+          <div style="display:flex; align-items:center; gap:5px; padding:7px 12px; border:1px solid #E3E3E3; border-radius:16px; font-size:13px; color:#55575C;">$</div>
+
+          <sc-if value="{{ projectPickerOpen }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ closeProjectPicker }}" style="position:fixed; inset:0; z-index:19;"></div>
+            <div style="position:absolute; top:38px; left:0; background:#fff; border:1px solid #ECECEC; border-radius:9px; box-shadow:0 8px 24px rgba(0,0,0,0.12); width:220px; z-index:20; overflow:hidden;">
+              <sc-for list="{{ projectOptions }}" as="po" hint-placeholder-count="4">
+                <div onClick="{{ po.onClick }}" style="padding:10px 14px; font-size:13px; cursor:pointer; background:{{ po.bg }}; color:{{ po.color }};">{{ po.name }}</div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; padding:9px 0; border-top:1px solid #F0F0F0;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><rect x="4" y="6" width="16" height="14" rx="2" stroke="#8A8D93" stroke-width="1.8"/><path d="M4 10h16M8 4v4M16 4v4" stroke="#8A8D93" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <div style="font-size:11px; font-weight:700; color:#8A8D93; letter-spacing:.03em; width:38px;">PLAN</div>
+          <div style="flex:1; font-size:13px; color:#55575C; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ modalDayText }}, {{ modalPlanTimeText }}</div>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><circle cx="12" cy="12" r="9" stroke="#8A8D93" stroke-width="1.6"/><path d="M12 8v4l3 2" stroke="#8A8D93" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <input type="number" step="0.5" min="0" value="{{ logModalAddPlanned }}" onChange="{{ setAddPlanned }}" style="width:44px; border:1px solid #E3E3E3; border-radius:6px; padding:4px 5px; font-size:12.5px; text-align:center;" />
+          <div onClick="{{ clearPlanRow }}" style="cursor:pointer; color:#8A8D93; font-size:15px; width:16px; text-align:center;">&times;</div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; padding:9px 0 16px; border-top:1px solid #F0F0F0;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><circle cx="12" cy="12" r="9" stroke="#8A8D93" stroke-width="1.8"/><path d="M12 8v4l3 2" stroke="#8A8D93" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <div style="font-size:11px; font-weight:700; color:#8A8D93; letter-spacing:.03em; width:38px;">LOG</div>
+          <div style="flex:1; font-size:13px; color:#55575C; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ modalDayText }}, {{ modalLogTimeText }}</div>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><circle cx="12" cy="12" r="9" stroke="#8A8D93" stroke-width="1.6"/><path d="M12 8v4l3 2" stroke="#8A8D93" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <input type="number" step="0.5" min="0" value="{{ logModalAddLogged }}" onChange="{{ setAddLogged }}" style="width:44px; border:1px solid #E3E3E3; border-radius:6px; padding:4px 5px; font-size:12.5px; text-align:center;" />
+          <div onClick="{{ clearLogRow }}" style="cursor:pointer; color:#8A8D93; font-size:15px; width:16px; text-align:center;">&times;</div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end;">
+          <div onClick="{{ submitLogTime }}" style="background:#A84C9D; color:#fff; text-align:center; font-weight:600; font-size:13.5px; padding:10px 18px; border-radius:8px; cursor:pointer; white-space:nowrap;">Log time &bull; {{ modalSubmitHours }}h</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ================= ENTRY DETAIL MODAL (click existing calendar block) ================= -->
+  <sc-if value="{{ entryDetailOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeEntryDetail }}" style="position:fixed; inset:0; background:rgba(20,20,20,0.35); display:flex; align-items:center; justify-content:center; z-index:200;">
+      <div onClick="{{ stopPropagation }}" style="background:#fff; width:420px; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,0.25); padding:20px 22px; position:relative;">
+        <div style="display:flex; align-items:center; gap:14px; margin-bottom:16px;">
+          <div style="font-size:11px; font-weight:700; letter-spacing:.06em; color:#8A8D93; flex:1;">{{ entryKindLabel }}</div>
+          <div style="width:26px; height:26px; border-radius:50%; background:#A84C9D; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff"><path d="M6 4l14 8-14 8z"/></svg>
+          </div>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="cursor:pointer; color:#8A8D93;"><path d="M14 4h6v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L10 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18 14v5a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <div style="position:relative;">
+            <svg onClick="{{ toggleEntryMenu }}" width="18" height="18" viewBox="0 0 24 24" fill="none" style="cursor:pointer; color:#8A8D93;"><circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg>
+            <sc-if value="{{ entryMenuOpen }}" hint-placeholder-val="{{ false }}">
+              <div onClick="{{ closeEntryMenu }}" style="position:fixed; inset:0; z-index:19;"></div>
+              <div style="position:absolute; top:24px; right:0; background:#fff; border:1px solid #ECECEC; border-radius:9px; box-shadow:0 8px 24px rgba(0,0,0,0.14); width:180px; z-index:20; overflow:hidden; padding:6px;">
+                <div onClick="{{ duplicateEntry }}" style="display:flex; align-items:center; gap:8px; padding:9px 10px; font-size:13px; cursor:pointer; border-radius:6px; color:#1A1A1A;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="8" y="8" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M4 16V6a2 2 0 012-2h10" stroke="currentColor" stroke-width="1.8"/></svg>
+                  Duplicate
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; padding:9px 10px; font-size:13px; color:#C7C9CC; cursor:not-allowed;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M10 14a3.5 3.5 0 005 0l3-3a3.5 3.5 0 00-5-5l-1 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M14 10a3.5 3.5 0 00-5 0l-3 3a3.5 3.5 0 005 5l1-1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                  Copy start link
+                </div>
+                <div onClick="{{ deleteEntry }}" style="display:flex; align-items:center; gap:8px; padding:9px 10px; font-size:13px; cursor:pointer; border-radius:6px; color:#8A0701;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Delete
+                </div>
+              </div>
+            </sc-if>
+          </div>
+          <div onClick="{{ closeEntryDetail }}" style="cursor:pointer; color:#8A8D93; font-size:16px; line-height:1;">&times;</div>
+        </div>
+
+        <input placeholder="Add description" value="{{ entryDetailName }}" onChange="{{ onEntryNameChange }}" style="width:100%; box-sizing:border-box; border:none; background:#F5F5F5; border-radius:8px; padding:11px 12px; font-size:14px; color:#1A1A1A; outline:none; margin-bottom:12px;" />
+
+        <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+          <div style="display:flex; align-items:center; gap:6px; padding:7px 12px; background:#F6E5F3; color:#A84C9D; border-radius:16px; font-size:13px; max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><path d="M9 11l3 3L22 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            {{ entryDetailName }}
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; padding:7px 12px; border:1px solid #E3E3E3; border-radius:16px; font-size:13px; color:#55575C; max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="currentColor" stroke-width="2"/></svg>
+            {{ entryProjectLabel }}
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; padding:9px 0 18px; border-top:1px solid #F0F0F0;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="flex-shrink:0; color:#8A8D93;">
+            <sc-if value="{{ entryIsPlanned }}" hint-placeholder-val="{{ false }}">
+              <g><rect x="4" y="6" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M4 10h16M8 4v4M16 4v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></g>
+            </sc-if>
+            <sc-if value="{{ entryIsLogged }}" hint-placeholder-val="{{ false }}">
+              <g><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></g>
+            </sc-if>
+          </svg>
+          <div style="flex:1; font-size:13px; color:#55575C;">{{ entryDateText }}</div>
+          <div style="font-size:13px; color:#1A1A1A; font-weight:600;">{{ entryHoursText }}</div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:8px;">
+          <div onClick="{{ closeEntryDetail }}" style="border:1px solid #E3E3E3; color:#1A1A1A; text-align:center; font-weight:600; font-size:13.5px; padding:10px 16px; border-radius:8px; cursor:pointer;">Log time</div>
+          <div onClick="{{ closeEntryDetail }}" style="background:#A84C9D; color:#fff; text-align:center; font-weight:600; font-size:13.5px; padding:10px 18px; border-radius:8px; cursor:pointer;">Save</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ================= TOASTS ================= -->
+  <div style="position:fixed; right:24px; bottom:24px; display:flex; flex-direction:column-reverse; gap:12px; z-index:500; width:360px;">
+    <sc-for list="{{ toasts }}" as="t" hint-placeholder-count="0">
+      <div onClick="{{ t.onClick }}" style="background:#fff; border-radius:10px; box-shadow:0 8px 28px rgba(0,0,0,0.14), 0 2px 6px rgba(0,0,0,0.08); border-bottom:4px solid {{ t.tone }}; padding:14px 16px 15px; display:flex; gap:12px; align-items:flex-start; opacity:{{ t.opacity }}; transform:translateY({{ t.translateY }}); transition:opacity .3s ease, transform .3s ease; cursor:{{ t.cursor }};">
+        <div style="width:36px; height:36px; border-radius:50%; background:{{ t.iconBg }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <sc-if value="{{ t.isClock }}" hint-placeholder-val="{{ false }}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="{{ t.tone }}" stroke-width="2"/><path d="M12 8v4l3 2" stroke="{{ t.tone }}" stroke-width="2" stroke-linecap="round"/></svg>
+          </sc-if>
+          <sc-if value="{{ t.isTriangle }}" hint-placeholder-val="{{ false }}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3L2 20h20L12 3z" stroke="{{ t.tone }}" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v4" stroke="{{ t.tone }}" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="{{ t.tone }}"/></svg>
+          </sc-if>
+          <sc-if value="{{ t.isCalendar }}" hint-placeholder-val="{{ false }}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="6" width="16" height="14" rx="2" stroke="{{ t.tone }}" stroke-width="2"/><path d="M4 10h16M8 4v4M16 4v4" stroke="{{ t.tone }}" stroke-width="2" stroke-linecap="round"/></svg>
+          </sc-if>
+        </div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-size:13.5px; font-weight:700; color:#1A1A1A;">{{ t.title }}</div>
+          <div style="font-size:13px; font-weight:600; color:{{ t.tone }}; margin-top:3px;">{{ t.stat }}</div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 900}, &quot;bannerStartExpanded&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Behavior&quot;}, &quot;toastAutoDismissMs&quot;: {&quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 6000, &quot;min&quot;: 2000, &quot;max&quot;: 8000, &quot;step&quot;: 500, &quot;unit&quot;: &quot;ms&quot;, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Behavior&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view: 'timer',
+    weekOffset: 0,
+    projectSubview: 'overview',
+    selectedProjectId: 'site-redesign',
+    dashboardMode: 'time',
+    dashboardDropdownOpen: false,
+    bannerExpanded: null,
+
+    logModalOpen: false,
+    logModalMode: 'toolbar',
+    logModalDayIndex: null,
+    logModalDescription: '',
+    logModalProjectId: 'bug-fix-sprint',
+    logModalAddLogged: 0.5,
+    logModalAddPlanned: 0,
+    projectPickerOpen: false,
+
+    entryDetailId: null,
+    entryMenuOpen: false,
+
+    varianceTooltipTarget: null,
+    toasts: [],
+
+    projects: {
+      'site-redesign': { id: 'site-redesign', name: 'Site Redesign', client: 'Northwind Studio', rate: null, dates: 'Jun 22 - Jul 5', estimate: 40, logged: 41.5, planned: 0, fixedFee: 4000, loggedWarnFired: true, loggedErrorFired: true, plannedWarnFired: false },
+      'bug-fix-sprint': { id: 'bug-fix-sprint', name: 'Bug Fix Sprint', client: 'Bramble & Co', rate: 55, dates: 'Jun 29 - Jul 3', estimate: 6, logged: 6, planned: 0, fixedFee: null, loggedWarnFired: true, loggedErrorFired: false, plannedWarnFired: false },
+      'project3': { id: 'project3', name: 'Homepage Content Refresh', client: 'Alder & Finch', rate: 60, dates: 'Jun 24 - Jul 8', estimate: 40, logged: 35, planned: 0, fixedFee: null, loggedWarnFired: false, loggedErrorFired: false, plannedWarnFired: false },
+      'project4': { id: 'project4', name: 'Client Portal Revamp', client: 'Solace Health', rate: 65, dates: 'Jun 20 - Jul 10', estimate: 44, logged: 10, planned: 40, fixedFee: null, loggedWarnFired: false, loggedErrorFired: false, plannedWarnFired: false },
+    },
+
+    timeEntries: [
+      { id: 1, dayIndex: 0, weekOffset: 0, name: 'Bug Fix Sprint', hours: 1, color: '#B23E7A', kind: 'logged', projectId: 'bug-fix-sprint' },
+      { id: 2, dayIndex: 0, weekOffset: 0, name: 'Homepage wireframe', hours: 1.5, color: '#7A6A16', kind: 'logged', projectId: 'site-redesign' },
+      { id: 3, dayIndex: 1, weekOffset: 0, name: 'Homepage prototype', hours: 4, color: '#7A6A16', kind: 'logged', projectId: 'site-redesign' },
+      { id: 4, dayIndex: 1, weekOffset: 0, name: 'Bug triage', hours: 4, color: '#7B5FC4', kind: 'logged', projectId: null },
+      { id: 5, dayIndex: 2, weekOffset: 0, name: 'Bug triage', hours: 3, color: '#7B5FC4', kind: 'logged', projectId: null },
+      { id: 6, dayIndex: 3, weekOffset: 0, name: 'Bug Fix Sprint', hours: 1, color: '#B23E7A', kind: 'logged', projectId: 'bug-fix-sprint' },
+      { id: 7, dayIndex: 3, weekOffset: 0, name: 'Homepage prototype', hours: 3, color: '#7A6A16', kind: 'logged', projectId: 'site-redesign' },
+      { id: 8, dayIndex: 4, weekOffset: 0, name: 'Bug Fix Sprint', hours: 4, color: '#B23E7A', kind: 'logged', projectId: 'bug-fix-sprint' },
+      { id: 9, dayIndex: 5, weekOffset: 0, name: 'Homepage feedback', hours: 8, color: '#7A6A16', kind: 'logged', projectId: 'site-redesign' },
+      { id: 10, dayIndex: 6, weekOffset: 0, name: 'Homepage writing', hours: 8, color: '#7A6A16', kind: 'logged', projectId: 'site-redesign' },
+    ],
+    nextEntryId: 11,
+  };
+
+  // ---------- static lookups ----------
+  weekdayAbbrevs() { return ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']; }
+  monthAbbrevs() { return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; }
+  getWeekMonday(offset) {
+    const base = new Date(2026, 5, 29); // Mon, Jun 29 2026 = "this week"
+    const d = new Date(base);
+    d.setDate(d.getDate() + offset * 7);
+    return d;
+  }
+  getWeekDates(offset) {
+    const monday = this.getWeekMonday(offset);
+    const out = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday);
+      d.setDate(d.getDate() + i);
+      out.push(d);
+    }
+    return out;
+  }
+  dayLabelsFor(offset) {
+    const wd = this.weekdayAbbrevs();
+    return this.getWeekDates(offset).map((d, i) => `${wd[i]} ${d.getDate()}`);
+  }
+  dayDatesFor(offset) {
+    const wd = this.weekdayAbbrevs();
+    const mo = this.monthAbbrevs();
+    return this.getWeekDates(offset).map((d, i) => `${wd[i][0]}${wd[i].slice(1).toLowerCase()}, ${mo[d.getMonth()]} ${d.getDate()}`);
+  }
+  weekMeta(offset) {
+    if (offset === 0) return { label: 'This week', weekNumber: 27 };
+    if (offset === -1) return { label: 'Last week', weekNumber: 26 };
+    if (offset === 1) return { label: 'Next week', weekNumber: 28 };
+    const dates = this.getWeekDates(offset);
+    const mo = this.monthAbbrevs();
+    const label = `${mo[dates[0].getMonth()]} ${dates[0].getDate()} \u2013 ${mo[dates[6].getMonth()]} ${dates[6].getDate()}`;
+    return { label, weekNumber: 27 + offset };
+  }
+  projectColor(id) {
+    const map = { 'site-redesign': '#7A6A16', 'bug-fix-sprint': '#B23E7A', 'project3': '#2E9E5B', 'project4': '#3E6FB2' };
+    return map[id] || '#7B5FC4';
+  }
+
+  // ---------- helpers ----------
+  pct(logged, estimate) { return estimate > 0 ? (logged / estimate * 100) : 0; }
+  round1(n) { return Math.round(n * 10) / 10; }
+  fmtHoursShort(h) { return this.round1(h).toString(); }
+  fmtHM(h) {
+    const totalMin = Math.round(h * 60);
+    const hh = Math.floor(totalMin / 60);
+    const mm = totalMin % 60;
+    return mm ? `${hh}h ${mm}m` : `${hh}h`;
+  }
+  fmtVariance(p) {
+    const diff = p.estimate - p.logged;
+    const totalMin = Math.round(Math.abs(diff) * 60);
+    if (totalMin < 1) return '';
+    const hh = Math.floor(totalMin / 60);
+    const mm = totalMin % 60;
+    const sign = diff > 0 ? '+' : '-';
+    return `${sign}${hh}h${mm ? mm + 'm' : ''}`;
+  }
+  barColor(pct) { return pct > 100 ? '#8A0701' : '#1E702A'; }
+  taskVariance(estimate, logged) {
+    if (estimate == null) return { text: '\u2013', color: '#8A8D93' };
+    const diffAbs = Math.abs(estimate - logged);
+    if (diffAbs < 0.01) return { text: '\u2013', color: '#8A8D93' };
+    const over = logged > estimate;
+    const text = (over ? '+' : '-') + this.fmtHM(diffAbs);
+    const color = over ? '#1E702A' : '#B5533C';
+    return { text, color };
+  }
+  computeTimeRangeText(hoursRaw) {
+    const hours = parseFloat(hoursRaw) || 0;
+    const start = 8;
+    const end = start + hours;
+    const fmt = (h) => {
+      const hh = Math.floor(h) % 24;
+      const mm = Math.round((h - Math.floor(h)) * 60);
+      return String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0');
+    };
+    return `${fmt(start)} \u2192 ${fmt(end)}`;
+  }
+  getDefaultDelta(id) {
+    const defaults = {
+      'site-redesign': { l: 0, p: 0 },
+      'bug-fix-sprint': { l: 0.5, p: 0 },
+      'project3': { l: 5, p: 0 },
+      'project4': { l: 0, p: 5 },
+    };
+    return defaults[id] || { l: 0, p: 0 };
+  }
+  makeToast(tone, icon, title, stat, projectId) {
+    const toneColor = tone === 'error' ? '#8A0701' : '#694500';
+    const iconBg = tone === 'error' ? '#F7E3E1' : '#F3E8D3';
+    return {
+      id: Date.now() + Math.random(),
+      tone: toneColor,
+      iconBg,
+      isClock: icon === 'clock',
+      isTriangle: icon === 'triangle',
+      isCalendar: icon === 'calendar',
+      title,
+      stat,
+      projectId,
+      opacity: 0,
+      translateY: '8px',
+    };
+  }
+  scheduleToastLifecycle(newToasts) {
+    if (!newToasts.length) return;
+    setTimeout(() => {
+      this.setState(s => ({ toasts: s.toasts.map(x => newToasts.find(n => n.id === x.id) ? { ...x, opacity: 1, translateY: '0px' } : x) }));
+    }, 30);
+    const dismissMs = this.props.toastAutoDismissMs ?? 4200;
+    newToasts.forEach(t => {
+      setTimeout(() => {
+        this.setState(s => ({ toasts: s.toasts.map(x => x.id === t.id ? { ...x, opacity: 0, translateY: '8px' } : x) }));
+      }, dismissMs);
+      setTimeout(() => {
+        this.setState(s => ({ toasts: s.toasts.filter(x => x.id !== t.id) }));
+      }, dismissMs + 300);
+    });
+  }
+  applyTimeChange(id, addLogged, addPlanned) {
+    const p = { ...this.state.projects[id] };
+    p.logged = Math.round((p.logged + addLogged) * 100) / 100;
+    p.planned = Math.round((p.planned + addPlanned) * 100) / 100;
+    const newLoggedPct = this.pct(p.logged, p.estimate);
+    const newPlannedPct = this.pct(p.planned, p.estimate);
+    const newToasts = [];
+
+    if (newLoggedPct > 100 && !p.loggedErrorFired) {
+      p.loggedErrorFired = true;
+      p.loggedWarnFired = true;
+      newToasts.push(this.makeToast('error', 'triangle', p.name, `${this.fmtHoursShort(p.logged)} of ${this.fmtHoursShort(p.estimate)} hours logged \u00b7 ${Math.round(newLoggedPct)}%`, id));
+    } else if (newLoggedPct >= 90 && newLoggedPct <= 100 && !p.loggedWarnFired) {
+      p.loggedWarnFired = true;
+      newToasts.push(this.makeToast('warning', 'clock', p.name, `${this.fmtHoursShort(p.logged)} of ${this.fmtHoursShort(p.estimate)} hours logged \u00b7 ${Math.round(newLoggedPct)}%`, id));
+    }
+
+    if (newPlannedPct > 100 && !p.plannedWarnFired) {
+      p.plannedWarnFired = true;
+      newToasts.push(this.makeToast('warning', 'calendar', p.name, `${this.fmtHoursShort(p.planned)} of ${this.fmtHoursShort(p.estimate)} hours planned \u00b7 ${Math.round(newPlannedPct)}%`, id));
+    }
+    return { project: p, toasts: newToasts };
+  }
+
+  // ---------- navigation ----------
+  goTimer = () => this.setState({ view: 'timer' });
+  goProjects = () => this.setState({ view: 'projects' });
+  goPrevWeek = () => this.setState(s => ({ weekOffset: s.weekOffset - 1 }));
+  goNextWeek = () => this.setState(s => ({ weekOffset: s.weekOffset + 1 }));
+  openProjectDashboard = (id) => {
+    this.setState({ view: 'project', projectSubview: 'dashboard', dashboardMode: 'time', selectedProjectId: id });
+  };
+  openProjectOverview = (id) => {
+    if (id !== 'site-redesign') return;
+    this.setState({ view: 'project', projectSubview: 'overview' });
+  };
+  goToDashboardTimeProgress = () => this.setState({ view: 'project', projectSubview: 'dashboard', dashboardMode: 'time' });
+  setProjectSubview = (v) => this.setState({ projectSubview: v });
+  toggleDashboardDropdown = () => this.setState(s => ({ dashboardDropdownOpen: !s.dashboardDropdownOpen }));
+  closeDashboardDropdown = () => this.setState({ dashboardDropdownOpen: false });
+  setDashboardMode = (m) => this.setState({ dashboardMode: m, dashboardDropdownOpen: false });
+  toggleBanner = () => this.setState(s => ({ bannerExpanded: !s.bannerExpanded }));
+  stopPropagation = (e) => { if (e && e.stopPropagation) e.stopPropagation(); };
+
+  setSrEstimate = (e) => {
+    const val = parseFloat(e.target.value) || 0;
+    this.setState(s => {
+      const p = { ...s.projects['site-redesign'], estimate: val };
+      const loggedPct = this.pct(p.logged, p.estimate);
+      const plannedPct = this.pct(p.planned, p.estimate);
+      p.loggedErrorFired = loggedPct > 100;
+      p.loggedWarnFired = loggedPct >= 90;
+      p.plannedWarnFired = plannedPct > 100;
+      return { projects: { ...s.projects, 'site-redesign': p } };
+    });
+  };
+
+  // ---------- tooltip ----------
+  showHeaderTooltip = () => this.setState({ varianceTooltipTarget: 'header' });
+  showTooltipFor = (id) => this.setState({ varianceTooltipTarget: id });
+  hideTooltip = () => this.setState({ varianceTooltipTarget: null });
+
+  // ---------- log time modal ----------
+  openLogModal = () => {
+    const id = this.state.logModalProjectId || 'bug-fix-sprint';
+    const d = this.getDefaultDelta(id);
+    this.setState({ logModalOpen: true, logModalMode: 'toolbar', logModalDayIndex: null, logModalDescription: '', logModalAddLogged: d.l, logModalAddPlanned: d.p, projectPickerOpen: false });
+  };
+  openCreateDialog = (dayIndex) => {
+    const id = this.state.logModalProjectId || 'site-redesign';
+    this.setState({ logModalOpen: true, logModalMode: 'calendar', logModalDayIndex: dayIndex, logModalDescription: '', logModalProjectId: id, logModalAddLogged: 1, logModalAddPlanned: 0, projectPickerOpen: false });
+  };
+  closeModal = () => this.setState({ logModalOpen: false, projectPickerOpen: false });
+  setModalDescription = (e) => this.setState({ logModalDescription: e.target.value });
+  toggleProjectPicker = () => this.setState(s => ({ projectPickerOpen: !s.projectPickerOpen }));
+  closeProjectPicker = () => this.setState({ projectPickerOpen: false });
+  selectModalProject = (id) => {
+    if (this.state.logModalMode === 'calendar') {
+      this.setState({ logModalProjectId: id, projectPickerOpen: false, logModalAddLogged: 1, logModalAddPlanned: 0 });
+    } else {
+      const d = this.getDefaultDelta(id);
+      this.setState({ logModalProjectId: id, projectPickerOpen: false, logModalAddLogged: d.l, logModalAddPlanned: d.p });
+    }
+  };
+  setAddLogged = (e) => this.setState({ logModalAddLogged: e.target.value });
+  setAddPlanned = (e) => this.setState({ logModalAddPlanned: e.target.value });
+  clearLogRow = () => this.setState({ logModalAddLogged: 0 });
+  clearPlanRow = () => this.setState({ logModalAddPlanned: 0 });
+
+  submitLogTime = () => {
+    const id = this.state.logModalProjectId;
+    const addLogged = parseFloat(this.state.logModalAddLogged) || 0;
+    const addPlanned = parseFloat(this.state.logModalAddPlanned) || 0;
+    let projects = this.state.projects;
+    let newToasts = [];
+    if (id && (addLogged > 0 || addPlanned > 0)) {
+      const result = this.applyTimeChange(id, addLogged, addPlanned);
+      projects = { ...projects, [id]: result.project };
+      newToasts = result.toasts;
+    }
+
+    let timeEntries = this.state.timeEntries;
+    let nextEntryId = this.state.nextEntryId;
+    if (this.state.logModalMode === 'calendar' && this.state.logModalDayIndex != null) {
+      const desc = this.state.logModalDescription.trim();
+      const color = this.projectColor(id);
+      const projName = projects[id] ? projects[id].name : 'Time entry';
+      const added = [];
+      if (addLogged > 0) {
+        added.push({ id: nextEntryId++, dayIndex: this.state.logModalDayIndex, weekOffset: this.state.weekOffset, name: desc || projName, hours: addLogged, color, kind: 'logged', projectId: id });
+      }
+      if (addPlanned > 0) {
+        added.push({ id: nextEntryId++, dayIndex: this.state.logModalDayIndex, weekOffset: this.state.weekOffset, name: desc || projName, hours: addPlanned, color, kind: 'planned', projectId: id });
+      }
+      if (added.length) timeEntries = [...timeEntries, ...added];
+    }
+
+    const toasts = [...this.state.toasts, ...newToasts];
+    this.setState({ projects, timeEntries, nextEntryId, toasts, logModalOpen: false, projectPickerOpen: false });
+    this.scheduleToastLifecycle(newToasts);
+  };
+
+  // ---------- entry detail ----------
+  openEntryDetail = (id) => this.setState({ entryDetailId: id, entryMenuOpen: false });
+  closeEntryDetail = () => this.setState({ entryDetailId: null, entryMenuOpen: false });
+  toggleEntryMenu = () => this.setState(s => ({ entryMenuOpen: !s.entryMenuOpen }));
+  closeEntryMenu = () => this.setState({ entryMenuOpen: false });
+  onEntryNameChange = (e) => {
+    const id = this.state.entryDetailId;
+    const val = e.target.value;
+    this.setState(s => ({ timeEntries: s.timeEntries.map(en => en.id === id ? { ...en, name: val } : en) }));
+  };
+  duplicateEntry = () => {
+    const id = this.state.entryDetailId;
+    const entry = this.state.timeEntries.find(e => e.id === id);
+    if (!entry) return;
+    const clone = { ...entry, id: this.state.nextEntryId };
+    let projects = this.state.projects;
+    let newToasts = [];
+    if (entry.projectId) {
+      const addLogged = entry.kind === 'logged' ? entry.hours : 0;
+      const addPlanned = entry.kind === 'planned' ? entry.hours : 0;
+      const result = this.applyTimeChange(entry.projectId, addLogged, addPlanned);
+      projects = { ...projects, [entry.projectId]: result.project };
+      newToasts = result.toasts;
+    }
+    const timeEntries = [...this.state.timeEntries, clone];
+    const toasts = [...this.state.toasts, ...newToasts];
+    this.setState({ projects, timeEntries, nextEntryId: this.state.nextEntryId + 1, toasts, entryDetailId: null, entryMenuOpen: false });
+    this.scheduleToastLifecycle(newToasts);
+  };
+  deleteEntry = () => {
+    const id = this.state.entryDetailId;
+    const entry = this.state.timeEntries.find(e => e.id === id);
+    if (!entry) return;
+    let projects = this.state.projects;
+    if (entry.projectId) {
+      const p = { ...projects[entry.projectId] };
+      if (entry.kind === 'logged') p.logged = Math.max(0, Math.round((p.logged - entry.hours) * 100) / 100);
+      else p.planned = Math.max(0, Math.round((p.planned - entry.hours) * 100) / 100);
+      projects = { ...projects, [entry.projectId]: p };
+    }
+    const timeEntries = this.state.timeEntries.filter(e => e.id !== id);
+    this.setState({ projects, timeEntries, entryDetailId: null, entryMenuOpen: false });
+  };
+
+  renderVals() {
+    const s = this.state;
+    const projects = s.projects;
+    const sr = projects['site-redesign'];
+    const selP = projects[s.selectedProjectId] || sr;
+    const bannerExpanded = s.bannerExpanded === null ? !!this.props.bannerStartExpanded : s.bannerExpanded;
+    const PX_PER_HOUR = 28;
+
+    // ----- calendar week from timeEntries -----
+    const labels = this.dayLabelsFor(s.weekOffset);
+    const weekDays = labels.map((label, idx) => {
+      const entries = s.timeEntries.filter(e => e.dayIndex === idx && (e.weekOffset || 0) === s.weekOffset);
+      return {
+        label,
+        onAddClick: () => this.openCreateDialog(idx),
+        blocks: entries.map(e => {
+          const height = e.hours * PX_PER_HOUR;
+          return {
+            id: e.id,
+            text: `${e.name} \u00b7 ${this.fmtHoursShort(e.hours)}h`,
+            color: e.color,
+            height,
+            showText: true,
+            opacity: e.kind === 'planned' ? 0.6 : 1,
+            border: e.kind === 'planned' ? '1.5px dashed rgba(255,255,255,0.85)' : 'none',
+            onClick: () => this.openEntryDetail(e.id),
+          };
+        }),
+      };
+    });
+
+    // ----- projects list rows -----
+    const order = ['site-redesign', 'bug-fix-sprint', 'project3', 'project4'];
+    const projectRows = order.map(id => {
+      const p = projects[id];
+      const pct = Math.round(this.pct(p.logged, p.estimate));
+      const overviewClickable = id === 'site-redesign';
+      return {
+        id: p.id,
+        name: p.name,
+        client: p.client,
+        rateText: p.rate ? `${p.rate} EUR` : 'None',
+        folderColor: id === 'site-redesign' ? '#C8910A' : (id === 'bug-fix-sprint' ? '#B23E7A' : '#2E9E5B'),
+        statusText: `${this.fmtHoursShort(p.logged)} of ${this.fmtHoursShort(p.estimate)} h \u00b7 ${pct}%`,
+        barWidth: Math.min(pct, 100) + '%',
+        barColor: this.barColor(pct),
+        fixedFeeText: p.fixedFee ? p.fixedFee.toLocaleString() + ' EUR' : '',
+        varianceText: this.fmtVariance(p),
+        varianceColor: (p.estimate - p.logged) < 0 ? '#8A0701' : '#1E702A',
+        onClick: () => this.openProjectDashboard(id),
+        cursor: 'pointer',
+        onNameClick: overviewClickable ? () => this.openProjectOverview(id) : () => {},
+        nameCursor: overviewClickable ? 'pointer' : 'default',
+        onTooltipEnter: () => this.showTooltipFor(id),
+        showTooltip: s.varianceTooltipTarget === id,
+      };
+    });
+
+    const bannerProjects = order
+      .map(id => projects[id])
+      .filter(p => this.pct(p.logged, p.estimate) > 100)
+      .map(p => {
+        return {
+          id: p.id,
+          name: p.name,
+          statText: `${this.fmtHoursShort(p.logged)} of ${this.fmtHoursShort(p.estimate)} hours logged \u00b7 ${Math.round(this.pct(p.logged, p.estimate))}%`,
+          onClick: () => this.openProjectDashboard(p.id),
+          cursor: 'pointer',
+        };
+      });
+
+    const projectOptionsBase = order.map(id => ({ id, name: projects[id].name }));
+    const projectOptions = projectOptionsBase.map(po => ({
+      name: po.name,
+      onClick: () => this.selectModalProject(po.id),
+      bg: s.logModalProjectId === po.id ? '#F6E5F3' : '#fff',
+      color: s.logModalProjectId === po.id ? '#A84C9D' : '#1A1A1A',
+    }));
+
+    // ----- site redesign widget (overview) -----
+    const srPct = Math.round(this.pct(sr.logged, sr.estimate));
+    const srVarianceColor = srPct > 100 ? '#8A0701' : '#1E702A';
+
+    // ----- project tabs -----
+    const tabNames = ['Overview', 'Tasks', 'Board', 'Timeline', 'Dashboard', 'Members'];
+    const projectTabs = tabNames.map(label => {
+      const key = label.toLowerCase();
+      const active = key === s.projectSubview;
+      const clickable = key === 'dashboard' || (key === 'overview' && s.selectedProjectId === 'site-redesign');
+      return {
+        label,
+        onClick: clickable ? () => this.setProjectSubview(key) : () => {},
+        cursor: clickable ? 'pointer' : 'default',
+        color: active ? '#A84C9D' : '#1A1A1A',
+        borderColor: active ? '#A84C9D' : 'transparent',
+      };
+    });
+
+    // ----- dashboard -----
+    const isBudget = s.dashboardMode === 'budget';
+    const dashboardModeLabel = isBudget ? 'Budget progress' : 'Time progress';
+    const dashboardModeOptions = [
+      { key: 'time', label: 'Time progress' },
+      { key: 'budget', label: 'Budget progress' },
+    ].map(o => ({
+      label: o.label,
+      onClick: () => this.setDashboardMode(o.key),
+      bg: s.dashboardMode === o.key ? '#F6E5F3' : '#fff',
+      color: s.dashboardMode === o.key ? '#A84C9D' : '#1A1A1A',
+      weight: s.dashboardMode === o.key ? 700 : 400,
+    }));
+
+    const selPct = Math.round(this.pct(selP.logged, selP.estimate));
+    const isOverEstimate = selP.logged > selP.estimate;
+    const overColor = isOverEstimate ? '#B5533C' : '#1A1A1A';
+    const remaining = Math.max(0, selP.estimate - selP.logged);
+    const dashboardSummaryCards = isBudget
+      ? [
+          { label: 'Fixed fee', value: (selP.fixedFee || 0).toLocaleString() + ' EUR', color: '#1A1A1A' },
+          { label: 'Invoiced amount', value: '0.00 EUR', color: '#1A1A1A' },
+          { label: 'Remaining budget', value: (selP.fixedFee || 0).toLocaleString() + ' EUR', color: '#1A1A1A' },
+          { label: 'Billable time', value: this.fmtHM(selP.logged), color: '#1A1A1A' },
+          { label: 'Amount', value: '0.00', color: '#1A1A1A' },
+        ]
+      : [
+          { label: 'Estimated time', value: selP.estimate + 'h', color: '#1A1A1A' },
+          { label: 'Logged time', value: this.fmtHM(selP.logged), color: overColor },
+          { label: 'Remaining time', value: this.fmtHM(remaining), color: '#1A1A1A' },
+          { label: 'Billable time', value: `${this.fmtHM(selP.logged)} (${selPct}%)`, color: '#1A1A1A' },
+          { label: 'Amount', value: '0.00', color: '#1A1A1A' },
+        ];
+
+    const breakdownByProject = {
+      'site-redesign': [
+        { task: 'Homepage wireframe (1)', logged: 1.5, loggedText: '1h 30m', estimate: 6 },
+        { task: 'Homepage prototype (1)', logged: 14, loggedText: '14h', estimate: null },
+        { task: 'Homepage feedback (1)', logged: 2, loggedText: '2h', estimate: null },
+        { task: 'Homepage writing (1)', logged: 16, loggedText: '16h', estimate: 12 },
+        { task: 'Planning and interviews (1)', logged: 8, loggedText: '8h', estimate: 6 },
+      ],
+      'bug-fix-sprint': [
+        { task: 'Critical bug triage (1)', logged: 3, loggedText: '3h', estimate: 3 },
+        { task: 'Regression testing (1)', logged: 2, loggedText: '2h', estimate: 2 },
+        { task: 'Hotfix deploy (1)', logged: 1, loggedText: '1h', estimate: 1 },
+      ],
+      'project3': [
+        { task: 'Content audit (1)', logged: 10, loggedText: '10h', estimate: 12 },
+        { task: 'Copy rewrite (1)', logged: 15, loggedText: '15h', estimate: 16 },
+        { task: 'Review & QA (1)', logged: 10, loggedText: '10h', estimate: 12 },
+      ],
+      'project4': [
+        { task: 'Requirements gathering (1)', logged: 4, loggedText: '4h', estimate: 8 },
+        { task: 'Wireframes (1)', logged: 3, loggedText: '3h', estimate: 10 },
+        { task: 'Backend API scaffold (1)', logged: 3, loggedText: '3h', estimate: 12 },
+        { task: 'Design review (1)', logged: 0, loggedText: '0h', estimate: 14 },
+      ],
+    };
+    const breakdownData = breakdownByProject[selP.id] || breakdownByProject['site-redesign'];
+    const breakdownRows = breakdownData.map(r => {
+      const v = this.taskVariance(r.estimate, r.logged);
+      return {
+        task: r.task,
+        logged: r.loggedText,
+        est: r.estimate != null ? this.fmtHM(r.estimate) : '\u2013',
+        variance: v.text,
+        varianceColor: v.color,
+      };
+    });
+
+    // ----- log time modal computed -----
+    const modalProject = projects[s.logModalProjectId] || sr;
+    const modalDayText = s.logModalDayIndex != null ? this.dayDatesFor(s.weekOffset)[s.logModalDayIndex] : 'Today';
+    const modalPlanTimeText = this.computeTimeRangeText(s.logModalAddPlanned);
+    const modalLogTimeText = this.computeTimeRangeText(s.logModalAddLogged);
+    const addLoggedNum = parseFloat(s.logModalAddLogged) || 0;
+    const addPlannedNum = parseFloat(s.logModalAddPlanned) || 0;
+    const modalSubmitHours = this.fmtHoursShort(addLoggedNum > 0 ? addLoggedNum : addPlannedNum);
+
+    // ----- entry detail computed -----
+    const entryDetail = s.entryDetailId != null ? s.timeEntries.find(e => e.id === s.entryDetailId) : null;
+    const entryProject = entryDetail && entryDetail.projectId ? projects[entryDetail.projectId] : null;
+
+    return {
+      isTimerView: s.view === 'timer',
+      isProjectsView: s.view === 'projects',
+      isProjectView: s.view === 'project',
+      isOverviewSubview: s.projectSubview === 'overview',
+      isDashboardSubview: s.projectSubview === 'dashboard',
+
+      goTimer: this.goTimer,
+      goProjects: this.goProjects,
+      goToDashboardTimeProgress: this.goToDashboardTimeProgress,
+      openLogModal: this.openLogModal,
+      closeModal: this.closeModal,
+      stopPropagation: this.stopPropagation,
+      toggleBanner: this.toggleBanner,
+      toggleDashboardDropdown: this.toggleDashboardDropdown,
+      closeDashboardDropdown: this.closeDashboardDropdown,
+      setAddLogged: this.setAddLogged,
+      setAddPlanned: this.setAddPlanned,
+      clearLogRow: this.clearLogRow,
+      clearPlanRow: this.clearPlanRow,
+      submitLogTime: this.submitLogTime,
+      showHeaderTooltip: this.showHeaderTooltip,
+      hideTooltip: this.hideTooltip,
+      setModalDescription: this.setModalDescription,
+      toggleProjectPicker: this.toggleProjectPicker,
+      closeProjectPicker: this.closeProjectPicker,
+      setSrEstimate: this.setSrEstimate,
+
+      openEntryDetail: this.openEntryDetail,
+      closeEntryDetail: this.closeEntryDetail,
+      toggleEntryMenu: this.toggleEntryMenu,
+      closeEntryMenu: this.closeEntryMenu,
+      onEntryNameChange: this.onEntryNameChange,
+      duplicateEntry: this.duplicateEntry,
+      deleteEntry: this.deleteEntry,
+
+      timerNavBg: s.view === 'timer' ? '#F6E5F3' : 'transparent',
+      timerNavColor: s.view === 'timer' ? '#A84C9D' : '#1A1A1A',
+      timerNavWeight: s.view === 'timer' ? 700 : 400,
+      projectsNavBg: (s.view === 'projects' || s.view === 'project') ? '#F6E5F3' : 'transparent',
+      projectsNavColor: (s.view === 'projects' || s.view === 'project') ? '#A84C9D' : '#1A1A1A',
+      projectsNavWeight: (s.view === 'projects' || s.view === 'project') ? 700 : 400,
+
+      bannerCount: bannerProjects.length,
+      hasOverEstimate: bannerProjects.length > 0,
+      bannerExpanded: bannerExpanded,
+      bannerChevronRotate: bannerExpanded ? '180deg' : '0deg',
+      bannerProjects,
+
+      weekDays,
+      projectRows,
+      varianceTooltipText: "Difference between project's estimated and logged time.\n+ means logged under 100%\n- means logged over 100%,\nempty means logged 100%.",
+      showHeaderTooltipVal: s.varianceTooltipTarget === 'header',
+
+      srWidgetText: `${this.fmtHoursShort(sr.logged)} of ${this.fmtHoursShort(sr.estimate)} hours logged \u00b7 ${srPct}%`,
+      srVarianceColor,
+      srBarColor: this.barColor(srPct),
+      srBarWidth: Math.min(srPct, 100) + '%',
+      srEstimateInput: sr.estimate,
+      selProjectName: selP.name,
+      selProjectClient: selP.client || '\u2013',
+      chartIsOver: selP.id === 'site-redesign' && isOverEstimate,
+      chartLineColor: '#3A2E4A',
+      chartEstText: `Est. ${selP.estimate}h`,
+      goPrevWeek: this.goPrevWeek,
+      goNextWeek: this.goNextWeek,
+      weekLabel: this.weekMeta(s.weekOffset).label,
+      weekNumber: this.weekMeta(s.weekOffset).weekNumber,
+
+      projectTabs,
+      dashboardMode: s.dashboardMode,
+      dashboardModeLabel,
+      dashboardDropdownOpen: s.dashboardDropdownOpen,
+      dashboardModeOptions,
+      dashboardSummaryCards,
+      breakdownRows,
+
+      logModalOpen: s.logModalOpen,
+      logModalDescription: s.logModalDescription,
+      logModalAddLogged: s.logModalAddLogged,
+      logModalAddPlanned: s.logModalAddPlanned,
+      projectPickerOpen: s.projectPickerOpen,
+      projectOptions,
+      modalProjectName: modalProject.name,
+      modalDayText,
+      modalPlanTimeText,
+      modalLogTimeText,
+      modalSubmitHours,
+
+      entryDetailOpen: !!entryDetail,
+      entryKindLabel: entryDetail ? (entryDetail.kind === 'planned' ? 'PLANNED' : 'LOGGED') : '',
+      entryDetailName: entryDetail ? entryDetail.name : '',
+      entryProjectLabel: entryProject ? entryProject.name : 'No project',
+      entryIsPlanned: entryDetail ? entryDetail.kind === 'planned' : false,
+      entryIsLogged: entryDetail ? entryDetail.kind === 'logged' : false,
+      entryDateText: entryDetail ? `${this.dayDatesFor(entryDetail.weekOffset || 0)[entryDetail.dayIndex]}, ${this.computeTimeRangeText(entryDetail.hours)}` : '',
+      entryHoursText: entryDetail ? `${this.fmtHoursShort(entryDetail.hours)}h` : '',
+      entryMenuOpen: s.entryMenuOpen,
+
+      toasts: s.toasts.map(t => ({
+        ...t,
+        onClick: t.projectId ? () => this.openProjectDashboard(t.projectId) : () => {},
+        cursor: t.projectId ? 'pointer' : 'default',
+      })),
+    };
+  }
+}
+
+</script>
+</body>
+</html>
