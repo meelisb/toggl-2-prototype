@@ -1,4 +1,4 @@
-# Toggl 2.0 — Time Variance Surfacing Prototype Brief
+# Toggl 2.0 — Time Variance Surfacing: Prototype Brief
 
 
 Meelis Burget

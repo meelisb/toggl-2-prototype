@@ -1,5 +1,8 @@
 # Toggl 2.0 — Time Variance Surfacing: Requirements Specification
 
+Meelis Burget
+05 July 2026
+
 Job stories with Gherkin acceptance criteria + non-functional requirements
 
 ---
