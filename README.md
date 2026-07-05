@@ -16,9 +16,11 @@ python3 -m http.server 8000
 
 Then open http://localhost:8000/.
 
-## Online Availability
 
-Live prototype: https://toggl-2-prototype.vercel.app/
+## Artifacts
 
-Video walkthrough: https://www.loom.com/share/896730e86e83474d8e9a0f92c9e5da64
-
+- Live prototype: https://toggl-2-prototype.vercel.app/
+- Video walkthrough: https://www.loom.com/share/896730e86e83474d8e9a0f92c9e5da64
+- Documents:
+  - Prototype Brief
+  - Requirements Specification
