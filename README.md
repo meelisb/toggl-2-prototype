@@ -5,8 +5,8 @@ Toggl 2.0 prototype — Project Variance Alerts
 A feature to prevent project scope creep for individual contributors, give contextual warnings about hitting project estimations for all users and turning time data into actionable insights that help people and teams plan better.
 
 A self-contained, static prototype exploring estimate-overrun alerts for Toggl 2.0:
-- Logged-entry crossing toast notifications
-- Planned-entry crossing toast notifications
+- Logged-entry crossing toast notification
+- Planned-entry crossing toast notification
 - Logged-entry crossing sidebar banner
 - Link to project dashboard
 - Variance column tooltip
