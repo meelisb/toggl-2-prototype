@@ -16,8 +16,6 @@ python3 -m http.server 8000
 
 Then open http://localhost:8000/.
 
-## Deploy to GitHub Pages
+## Availability
 
-1. Push this repo to GitHub.
-2. In repo Settings → Pages, set source to the `main` branch, root folder.
-3. The site will be published at `https://<user>.github.io/<repo>/`.
+Live prototype: https://toggl-2-prototype.vercel.app/
