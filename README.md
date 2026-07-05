@@ -2,7 +2,14 @@
 
 Toggl 2.0 prototype — Project Variance Alerts
 
-A self-contained, static prototype exploring estimate-overrun alerts for Toggl 2.0 (timer, weekly calendar, projects list, project dashboard, log-time modal, and toast notifications).
+A feature to prevent project scope creep for individual contributors, give contextual warnings about hitting project estimations for all users and turning time data into actionable insights that help people and teams plan better.
+
+A self-contained, static prototype exploring estimate-overrun alerts for Toggl 2.0:
+- Logged-entry crossing toast notifications
+- Planned-entry crossing toast notifications
+- Logged-entry crossing sidebar banner
+- Link to project dashboard
+- Variance column tooltip
 
 No backend, no build step — it's a single HTML page that runs React from a CDN.
 
