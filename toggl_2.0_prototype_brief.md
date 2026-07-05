@@ -1,4 +1,4 @@
-# Toggl 2.0 — Time Variance Surfacing Product Brief
+# Toggl 2.0 — Time Variance Surfacing Prototype Brief
 
 05 July 2026
 
