@@ -1,8 +1,8 @@
 # toggl-2-prototype
 
-Toggl 2.0 prototype — Toggl Estimate Alerts
+Toggl 2.0 prototype — Project Variance Alerts
 
-A self-contained, static prototype exploring estimate-overrun alerts for Toggl Track (timer, weekly calendar, projects list, project dashboard, log-time modal, and toast notifications).
+A self-contained, static prototype exploring estimate-overrun alerts for Toggl 2.0 (timer, weekly calendar, projects list, project dashboard, log-time modal, and toast notifications).
 
 No backend, no build step — it's a single HTML page that runs React from a CDN.
 
@@ -16,8 +16,9 @@ python3 -m http.server 8000
 
 Then open http://localhost:8000/.
 
-## Deploy to GitHub Pages
+## Online Availability
 
-1. Push this repo to GitHub.
-2. In repo Settings → Pages, set source to the `main` branch, root folder.
-3. The site will be published at `https://<user>.github.io/<repo>/`.
+Live prototype: https://toggl-2-prototype.vercel.app/
+
+Video walkthrough: https://www.loom.com/share/896730e86e83474d8e9a0f92c9e5da64
+
