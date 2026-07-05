@@ -1,8 +1,8 @@
 # toggl-2-prototype
 
-Toggl 2.0 prototype — Toggl Estimate Alerts
+Toggl 2.0 prototype — Project Variance Alerts
 
-A self-contained, static prototype exploring estimate-overrun alerts for Toggl Track (timer, weekly calendar, projects list, project dashboard, log-time modal, and toast notifications).
+A self-contained, static prototype exploring estimate-overrun alerts for Toggl 2.0 (timer, weekly calendar, projects list, project dashboard, log-time modal, and toast notifications).
 
 No backend, no build step — it's a single HTML page that runs React from a CDN.
 
